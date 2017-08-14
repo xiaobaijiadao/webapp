@@ -95,7 +95,7 @@ async def response_factory(app, handler):
 		if isinstance(r, str):
 			# 先判断是不是需要重定向，是的话直接用重定向的地址重定向
 			if r.startswith('redirect:'):
-				return web.HTTPFound(r[9:])
+				return web.HTTPFound(r[9:])		#转入别的网站
 			# 不是重定向的话，把字符串当做是html代码来处理
 			resp = web.Response(body=r.encode('utf-8'))
 			resp.content_type = 'text/html;charset=utf-8'

@@ -21,6 +21,7 @@ class APIError(Exception):
 class APIValueError(APIError):
 	'''
 	Indicate the input value has error or invalid. The data specifies the error field of input form.
+	表明输入数据有问题，data说明输入的错误字段
 	'''
 	def __init__(self, field, message=''):
 		super(APIValueError,self).__init__('value: invalid',field, message)
@@ -28,6 +29,7 @@ class APIValueError(APIError):
 class APIResourceNotFoundError(APIError):
 	'''
 	Indicate the resource was not found. The data specifies the resource name.
+	表明找不到资源，data说明资源名字
 	'''
 	def __init__(self, field, message=''):
 		super(APIResourceNotFoundError, self).__init__('value: notfound', field, message)
@@ -35,6 +37,7 @@ class APIResourceNotFoundError(APIError):
 class APIPermissionError(APIError):
 	'''
 	Indicate the api has no permission
+	接口没有权限
 	'''
 	def __init__(self, message=''):
 		super(APIPermissionError, self).__init__('permission: forbidden', 'permission', message)
