@@ -9,10 +9,10 @@ import aiomysql
 def log(sql, args=()):
 	logging.info('SQL: %s' % sql)
 
-async def creat_pool(loop, **kw):
+async def create_pool(loop, **kw):
 	logging.info('create datebase connection pool...')
 	global __pool
-	__pool = await aiomysql.creat_pool(
+	__pool = await aiomysql.create_pool(
 		host = kw.get('host', 'localhost'),
 		port = kw.get('port', 3306),
 		user = kw['user'],
@@ -28,8 +28,8 @@ async def creat_pool(loop, **kw):
 async def select(sql, args, size = None):
 	log(sql, args)
 	global __pool
-	asnyc with __pool.get() as conn:
-		asnyc with conn.cursor(aiomysql.DictCursor) as cur:
+	async with __pool.get() as conn:
+		async with conn.cursor(aiomysql.DictCursor) as cur:
 			await cur.execute(sql.replace('?', '%s'), args or ())
 			if size:
 				rs = await cur.fetchmany(size)
@@ -84,7 +84,7 @@ class BooleanField(Field):
 
 class IntegerField(Field):
 
-	def __init__(self, name=None, primary_key=Flase, default=0):
+	def __init__(self, name=None, primary_key=False, default=0):
 		super.__init__(name, 'bigint', primary_key, default)
 
 class FloatField(Field):
