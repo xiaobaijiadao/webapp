@@ -16,6 +16,7 @@ from jinja2 import Environment, FileSystemLoader
 
 import orm
 from coroweb import add_routes, add_static
+from config import configs
 
 def init_jinja2(app, **kw):
 	logging.info('init jinja2...')
@@ -52,7 +53,7 @@ def init_jinja2(app, **kw):
 async def logger_factory(app, handler):
 	async def logger(request):
 		logging.info('Request: %s %s' % (request.method, request.path))
-		await asyncio.sleep(0.3)
+		#await asyncio.sleep(0.3)
 		return (await handler(request))
 	return logger
 
@@ -111,7 +112,7 @@ async def response_factory(app, handler):
 				return resp
 			else:
 				# 如果有'__template__'为key的值，则说明要套用jinja2的模板，'__template__'Key对应的为模板网页所在位置
-				resp = web.Response(body=app['__template__'].get_template(template).render(**r).encode('utf-8'))
+				resp = web.Response(body=app['__templating__'].get_template(template).render(**r).encode('utf-8'))
 				resp.content_type = 'text/html;charset=utf-8'
 				return resp
 		# 如果响应结果为int
@@ -128,6 +129,7 @@ async def response_factory(app, handler):
 		resp = web.Response(body=str(r).encode('utf-8'))
 		resp.content_type = 'text/plain;charset=utf-8'
 		return resp
+	return response
 
 def datetime_filter(t):
 	delta = int(time.time() - t)
@@ -144,7 +146,7 @@ def datetime_filter(t):
 
 async def init(loop):
 	# 创建数据库连接池，之后用db参数传配置文件里的配置db
-	await orm.create_pool(loop, host='127.0.0.1', port=3306, user='root', password='wx951031', db='awesome')
+	await orm.create_pool(loop, host=configs.db.host, port=configs.db.port, user=configs.db.user, password=configs.db.password, db=configs.db.db)
 	# middlewares设置两个中间处理函数
     # middlewares中的每个factory接受两个参数，app 和 handler(即middlewares中得下一个handler)
     # 譬如这里logger_factory的handler参数其实就是response_factory()
