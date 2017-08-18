@@ -93,7 +93,7 @@ class RequestHandler(object):    #从URL中分析出要接收的参数，从requ
 				if not request.content_type:	#查询有没提交数据的格式（EncType）
 					return web.HTTPBadRequest('Missing Content-Type.')
 				ct = request.content_type.lower()
-				if ct .startwith('application/json'):
+				if ct .startswith('application/json'):
 					params = await request.json()
 					if not isinstance(params, dict):
 						return web.HTTPBadRequest('JSON body must be object.')

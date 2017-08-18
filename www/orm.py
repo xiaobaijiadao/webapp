@@ -45,7 +45,7 @@ async def execute(sql, args, autocommit=True):
 			await conn.begin()
 		try:
 			async with conn.cursor(aiomysql.DictCursor) as cur:
-				await cur.execute(sql.repalce('?', '%s'), args)
+				await cur.execute(sql.replace('?', '%s'), args)
 				affected = cur.rowcount
 			if not autocommit:
 				await conn.commit()
@@ -209,7 +209,7 @@ class Model(dict, metaclass=ModelMetaclass):
 	async def save(self):
 		args = list(map(self.getValueOrDefault, self.__fields__))
 		args.append(self.getValueOrDefault(self.__primary_key__))
-		rows = await excute(self.__insert__, args)
+		rows = await execute(self.__insert__, args)
 		if rows != 1:
 			logging.warn('failed to insert record: affected rows: %s' % rows)
 
