@@ -43,7 +43,7 @@ def init_jinja2(app, **kw):
     # 这里把要加载的模板和配置传给Environment，生成Environment实例
 	env = Environment(loader=FileSystemLoader(path), **options)
 	# 从参数取filter字段
-    # filters: 一个字典描述的filters过滤器集合, 如果非模板被加载的时候, 可以安全的添加filters或移除较早的.
+    # filters: 一个字典描述的filters过滤器集合, 如果非模板被加载的时候,可以安全的添加filters或移除较早的.
 	filters = kw.get('filters', None)
 	# 如果有传入的过滤器设置，则设置为env的过滤器集合
 	if filters is not None:
@@ -77,10 +77,10 @@ async def auth_factory(app, handler):
 async def data_factory(app, handler):
 	async def parse_data(request):
 		if request.method == 'POST':
-			if request.content_type.startwith('application/json'):
+			if request.content_type.startswith('application/json'):
 				request.__data__ = await request.json()
 				logging.info('request json: %s' % str(request.__data__))
-			elif request.content_type.startwith('application/x-www-form-urlencoded'):
+			elif request.content_type.startswith('application/x-www-form-urlencoded'):
 				request.__data__ = await request.post()
 				logging.info('request form: %s' % str(request.__data__))
 		return (await handler(request))
